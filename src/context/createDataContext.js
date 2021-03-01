@@ -15,6 +15,5 @@ export default (reducer, actions, initialState) =>{
             {children}
         </Context.Provider>
     }
-
     return {Context, Provider}
 }

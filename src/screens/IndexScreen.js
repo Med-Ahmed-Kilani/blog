@@ -3,38 +3,50 @@ import { Text, StyleSheet, FlatList, Button, View, TouchableOpacity } from 'reac
 import { Context } from '../context/BlogContext';
 import { AntDesign } from '@expo/vector-icons';
 
+const Home = ({navigation}) => {
 
-const Home = () => {
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Create') }>
+                    <AntDesign name="pluscircleo" size={24} color="black" />
+                </TouchableOpacity>
+            ),
+        });
+    });
 
-    const {state, addBlogPost, deleteBlogPost} = useContext(Context)
-
+    const {state, deleteBlogPost} = useContext(Context)
 
     return<>
-        <Text>Hello there !</Text>
-        <Button title='Add Blog' onPress={addBlogPost}/>
         <FlatList
             data={state}
             keyExtractor={(state)=>state.id.toString()}
             renderItem={({item})=>{
-                return <View style={styles.blogCard}>
-                    <Text style={styles.Blog} >{item.title}  {item.id}</Text>
+                return <>
                     <TouchableOpacity
-                        onPress={()=>deleteBlogPost(item.id)}
+                        style={styles.blogCard}
+                        onPress={()=>navigation.navigate('Details', {id: item.id})}
                     >
-                        <AntDesign name="delete" size={24} color="black" />
+                        <Text style={styles.Blog} >{item.title}  {item.id}</Text>
+                        <TouchableOpacity
+                            onPress={()=>deleteBlogPost(item.id)}
+                        >
+                            <AntDesign style={styles.icon} name="delete" size={24} color="black" />
+                        </TouchableOpacity>
                     </TouchableOpacity>
-                </View>
+                    
+                </>
             }}
         />
     </>
 }
+
 
 const styles = StyleSheet.create({
     blogCard:{
         flexDirection:'row',
         height:60,
         width:'96%',
-        flex:1,
         marginHorizontal:'2%',
         marginVertical:3,
         paddingHorizontal:10,
@@ -45,6 +57,9 @@ const styles = StyleSheet.create({
     Blog:{
         fontSize:30,
         flex:1
+    },
+    icon: {
+        padding:15
     }
 })
 
