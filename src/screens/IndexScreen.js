@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Text, StyleSheet, FlatList, Button, View, TouchableOpacity } from 'react-native';
 import { Context } from '../context/BlogContext';
 import { AntDesign } from '@expo/vector-icons';
@@ -15,7 +15,19 @@ const Home = ({navigation}) => {
         });
     });
 
-    const {state, deleteBlogPost} = useContext(Context)
+    useEffect(() => {
+        getBlogPosts()
+
+        const listener = navigation.addListener('focus', ()=>{
+            getBlogPosts()
+        })
+
+        return () => {
+            listener.remove()
+        }
+    }, [])
+
+    const {state, deleteBlogPost, getBlogPosts } = useContext(Context)
 
     return<>
         <FlatList
